@@ -2,6 +2,9 @@ canvas {
   border-color: black;
   border-width: 2px;
   border-style: solid;
+
+  width: 100%;
+  height: auto;
 }
 
 html, body, .container-table {

@@ -79,8 +79,15 @@ function main() {
     var pointX = x - canvas.getBoundingClientRect().left;
     var pointY = y - canvas.getBoundingClientRect().top;
 
-    var row = Math.floor(pointY / boxSizeY);
-    var col = Math.floor(pointX / boxSizeX);
+    // convert to canvas coordinate
+    var canvasPointX = maxWidth/canvas.getBoundingClientRect().width * pointX;
+    var canvasPointY = maxHeight/canvas.getBoundingClientRect().height * pointY;
+
+    // console.log("Point X: " + canvasPointX);
+    // console.log("Point Y: " + canvasPointY);
+
+    var row = Math.floor(canvasPointY / boxSizeY);
+    var col = Math.floor(canvasPointX / boxSizeX);
 
     var boxIndex = row * 3 + col;
     return boxIndex;
