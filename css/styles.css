@@ -11,6 +11,10 @@ html, body, .container-table {
     height: 100%;
 }
 
+h1 {
+  text-align: center;
+}
+
 .result {
   text-align: center;
   color: white;
