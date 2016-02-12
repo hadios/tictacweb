@@ -1,0 +1,32 @@
+canvas {
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+}
+
+html, body, .container-table {
+    height: 100%;
+}
+
+.result {
+  text-align: center;
+  color: white;
+}
+
+.square-responsive {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+}
+
+.container-table {
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.draw-screen {
+  padding: auto 10% auto 10%;
+}
