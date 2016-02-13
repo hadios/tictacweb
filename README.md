@@ -1,6 +1,8 @@
 # tictacweb
 
-A simple tictactoe game using html5 canvas. 
+A simple tictactoe game using html5 canvas.
+
+Try it out [here](http://hadios.github.io/tictacweb/). 
 
 #Quest objectives
 - [x] Make a game using HTML5 canvas
