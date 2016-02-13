@@ -1,11 +1,15 @@
 $(document).ready(function() {
+  $('#restart').click(function(e) {
+    resetGame();
+  });
+
   main();
 });
-
 
 function main() {
   var INTERVAL_ID;
 
+  // Game application settings
   var maxHeight;
   var maxWidth;
 
@@ -15,9 +19,10 @@ function main() {
   var circleImg = new Image();
   var crossImg = new Image();
 
+  // Gameplay settings
   var floor = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   var markCount = 0;
-  var win = false;
+  var gameEnd = false;
   var winner = false;
 
   function init() {
@@ -34,45 +39,45 @@ function main() {
     //
     // console.log("Box width: " + boxSizeX);
     // console.log("Box height: " + boxSizeY);
-    // Prepare
+
+
 
     $('#canvas').click(function(e) {
-      if (win) {
+      if (gameEnd) {
         return;
       }
 
-      var boxIndex = detectInput(e, canvas);
-      var playerMark = updateGrid(boxIndex);
+      var inputPoint = processInput(e, canvas);
+      var boxIndex = getBoxClickedIndex(inputPoint);
+      var isPlayerMark = updateGrid(boxIndex);
 
-      win = checkWin();
-      if (win) {
+      gameEnd = checkWin();
+      if (gameEnd) {
         winner = true;
         showResult();
         return;
       }
 
-      if (playerMark && markCount < 9) {
+      if (isPlayerMark && markCount < 9) {
         aiTurns();
-        win = checkWin();
+        gameEnd = checkWin();
 
-        if (win) {
+        if (gameEnd) {
           showResult();
         }
       }
     });
 
-    $('#restart').click(function(e) {
-      resetGame();
-    });
-
     var isAiTurn = randomNumberInRange(0, 1) % 2 == 0 ? true : false;
-
     if (isAiTurn) {
       aiTurns();
     }
   }
 
-  function detectInput(e, canvas) {
+  /*
+   *  Input functions
+   */
+  function processInput(e, canvas) {
     var x = e.clientX;
     var y = e.clientY;
 
@@ -80,19 +85,29 @@ function main() {
     var pointY = y - canvas.getBoundingClientRect().top;
 
     // convert to canvas coordinate
-    var canvasPointX = maxWidth/canvas.getBoundingClientRect().width * pointX;
-    var canvasPointY = maxHeight/canvas.getBoundingClientRect().height * pointY;
+    var canvasPointX = maxWidth / canvas.getBoundingClientRect().width * pointX;
+    var canvasPointY = maxHeight / canvas.getBoundingClientRect().height * pointY;
 
     // console.log("Point X: " + canvasPointX);
     // console.log("Point Y: " + canvasPointY);
 
-    var row = Math.floor(canvasPointY / boxSizeY);
-    var col = Math.floor(canvasPointX / boxSizeX);
+    return {
+      "x": canvasPointX,
+      "y": canvasPointY
+    };
+  }
+
+  function getBoxClickedIndex(inputPoint) {
+    var row = Math.floor(inputPoint.y / boxSizeY);
+    var col = Math.floor(inputPoint.x / boxSizeX);
 
     var boxIndex = row * 3 + col;
     return boxIndex;
   }
 
+  /*
+   *  Game logic
+   */
   function updateGrid(boxIndex) {
     if (floor[boxIndex] != 0) {
       return false;
@@ -109,7 +124,6 @@ function main() {
   }
 
   function aiTurns() {
-    // Randomly choosing tiles
     var min = 0;
     var max = 8;
     var chosenIndex;
@@ -188,6 +202,9 @@ function main() {
     floor = [0, 0, 0, 0, 0, 0, 0, 0];
   }
 
+  /*
+   *  Utility functions
+   */
   function getContext() {
     var canvas = document.getElementById('canvas');
     if (!canvas) {
@@ -201,6 +218,11 @@ function main() {
 
     return ctx;
   }
+
+
+  /*
+   *  Render functions
+   */
 
   function drawImageInBox(ctx, imageToDraw) {
     ctx.save();
@@ -266,11 +288,14 @@ function main() {
       }
     }
 
-    if (win) {
+    if (gameEnd) {
       clearInterval(INTERVAL_ID);
     }
   }
 
+  /*
+   *  Main
+   */
   init();
   beginRender();
 }
